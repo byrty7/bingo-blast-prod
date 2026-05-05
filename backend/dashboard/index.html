@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bingo Blast Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">BB</div>
+        <div>
+          <div class="brand-title">Bingo Blast</div>
+          <div class="brand-subtitle">Backend dashboard</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="overview">Overview</button>
+        <button class="nav-item" data-view="api">API Explorer</button>
+        <button class="nav-item" data-view="data">Data Model</button>
+        <button class="nav-item" data-view="testing">Testing</button>
+        <button class="nav-item" data-view="ops">Operations</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <div class="sidebar-label">Quick links</div>
+        <a href="/dashboard/" target="_blank" rel="noreferrer">Dashboard home</a>
+        <a href="/api/docs" target="_blank" rel="noreferrer">Swagger docs</a>
+        <a href="/api/dashboard/data" target="_blank" rel="noreferrer">Dashboard JSON</a>
+        <a href="/api/leaderboard" target="_blank" rel="noreferrer">Leaderboard API</a>
+        <a href="/api/shop/items" target="_blank" rel="noreferrer">Shop items API</a>
+      </div>
+
+      <div class="sidebar-card status-card">
+        <div class="sidebar-label">Live status</div>
+        <div id="status-text">Loading...</div>
+        <div id="status-meta" class="muted">Checking backend...</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="hero">
+        <div>
+          <div class="eyebrow">Modern admin showcase</div>
+          <p class="hero-kicker">Bingo Blast API Dashboard</p>
+          <h1 id="dashboard-title">Bingo Blast Dashboard</h1>
+          <p id="dashboard-subtitle">
+            A single place to inspect the backend, test the important flows, and understand the major updates.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <a class="ghost-btn" href="/api/dashboard/data" target="_blank" rel="noreferrer">View JSON</a>
+          <a class="primary-btn" href="/api/docs" target="_blank" rel="noreferrer">Open Swagger</a>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="stats-grid"></section>
+
+      <section class="panel view" data-panel="overview">
+        <div class="panel-header">
+          <h2>Major updates</h2>
+          <p>What the backend currently supports and what the dashboard showcases.</p>
+        </div>
+        <div class="cards" id="updates-grid"></div>
+      </section>
+
+      <section class="panel view hidden" data-panel="api">
+        <div class="panel-header">
+          <h2>API Explorer</h2>
+          <p>All the important routes grouped by feature area.</p>
+        </div>
+        <div id="endpoint-groups" class="endpoint-groups"></div>
+      </section>
+
+      <section class="panel view hidden" data-panel="data">
+        <div class="panel-header">
+          <h2>Data Model</h2>
+          <p>MongoDB collections, their purpose, and the fields you will usually inspect while testing.</p>
+        </div>
+        <div id="collections-grid" class="cards"></div>
+      </section>
+
+      <section class="panel view hidden" data-panel="testing">
+        <div class="panel-header">
+          <h2>Testing shortcuts</h2>
+          <p>Use these flows to quickly validate the backend from the browser or your test runner.</p>
+        </div>
+        <div class="runner-help">
+          <article class="help-card">
+            <h3>Run all pytest</h3>
+            <p>Runs the full Python test suite under <code>backend/tests</code>. Use this when you want the broadest backend check.</p>
+          </article>
+          <article class="help-card">
+            <h3>Run extended APIs</h3>
+            <p>Runs <code>tests/test_api_extended.py</code>, which covers extra routes like dashboard, VIP, cosmetics, push, and guilds.</p>
+          </article>
+          <article class="help-card">
+            <h3>Run engagement suite</h3>
+            <p>Runs <code>tests/test_engagement_phases.py</code> to verify missions, battle pass, collection, streaks, and live-game flows.</p>
+          </article>
+          <article class="help-card">
+            <h3>Run smoke script</h3>
+            <p>Runs <code>scripts/smoke_test_apis.py</code> against the live API for a fast end-to-end sanity check.</p>
+          </article>
+        </div>
+        <div class="runner-toolbar">
+          <input id="test-target" class="runner-input" type="text" placeholder="Optional pytest target e.g. tests/test_api_extended.py::TestDashboard::test_dashboard_html" />
+          <button class="runner-btn primary" data-run="pytest">Run all pytest</button>
+          <button class="runner-btn" data-run="extended">Run extended APIs</button>
+          <button class="runner-btn" data-run="engagement">Run engagement suite</button>
+          <button class="runner-btn" data-run="smoke">Run smoke script</button>
+        </div>
+        <div class="testing-grid">
+          <article class="test-card">
+            <h3>Fast smoke checks</h3>
+            <ol>
+              <li>Open <code>/api/dashboard</code>.</li>
+              <li>Check <code>/api/dashboard/data</code> for the shape.</li>
+              <li>Use <code>/api/guest/login</code> and <code>/api/user/{user_id}</code>.</li>
+              <li>Try <code>/api/rooms</code> and <code>/api/computer-match</code>.</li>
+            </ol>
+          </article>
+          <article class="test-card">
+            <h3>Useful validation</h3>
+            <ol>
+              <li>Daily reward and streak info.</li>
+              <li>Battle pass and collection progress.</li>
+              <li>Razorpay config + mock order/verify.</li>
+              <li>Guild create / list / join / leave.</li>
+            </ol>
+          </article>
+          <article class="test-card">
+            <h3>Live multiplayer</h3>
+            <ol>
+              <li>Create a room.</li>
+              <li>Join from a second user.</li>
+              <li>Open the WebSocket room URL.</li>
+              <li>Start and claim bingo.</li>
+            </ol>
+          </article>
+        </div>
+        <div class="runner-panel">
+          <div class="runner-head">
+            <h3>Live test output</h3>
+            <span id="runner-status" class="runner-status idle">Idle</span>
+          </div>
+          <div class="runner-meta" id="runner-meta">No test run yet.</div>
+          <pre id="runner-log" class="runner-log">Click one of the run buttons to start a live test session.</pre>
+        </div>
+      </section>
+
+      <section class="panel view hidden" data-panel="ops">
+        <div class="panel-header">
+          <h2>Operations</h2>
+          <p>Deployment notes and backend knobs you will usually edit.</p>
+        </div>
+        <div class="ops-grid">
+          <article class="ops-card">
+            <h3>Environment</h3>
+            <p><code>MONGO_URL</code>, <code>DB_NAME</code>, and optional Razorpay keys.</p>
+          </article>
+          <article class="ops-card">
+            <h3>Run locally</h3>
+            <p><code>python -m uvicorn server:app --reload --host 0.0.0.0 --port 8000</code></p>
+          </article>
+          <article class="ops-card">
+            <h3>MongoDB</h3>
+            <p>Collections auto-create from app usage: users, rooms, matches, transactions, guilds.</p>
+          </article>
+          <article class="ops-card">
+            <h3>WebSockets</h3>
+            <p>Room live play uses <code>/api/ws/room/{room_id}/{user_id}</code>.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="sr-only">
+        <p>/api/guilds/create</p>
+      </section>
+    </main>
+  </div>
+
+  <template id="card-template">
+    <article class="card">
+      <div class="card-top">
+        <h3></h3>
+        <span class="pill"></span>
+      </div>
+      <p></p>
+      <div class="tag-list"></div>
+    </article>
+  </template>
+
+  <template id="endpoint-template">
+    <article class="endpoint-card">
+      <div class="endpoint-head">
+        <h3></h3>
+        <button class="copy-btn" type="button">Copy</button>
+      </div>
+      <ul></ul>
+    </article>
+  </template>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
